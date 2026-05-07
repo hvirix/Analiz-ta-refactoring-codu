@@ -1,0 +1,16 @@
+{
+  "name": "лаб4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest",
+    "test:cov": "jest --coverage"
+  },
+  "private": true,
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}
