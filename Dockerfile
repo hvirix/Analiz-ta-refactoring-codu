@@ -1,7 +1,7 @@
 # --- BUILD STAGE ---
 FROM node:20-slim AS builder
 
-# Install build dependencies for native modules (sqlite3, bcrypt)
+# Встановлюємо залежності для нативних модулів
 RUN apt-get update && apt-get install -y \
     python3 \
     make \
@@ -12,7 +12,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Install all dependencies (including devDependencies if needed, or just production)
+# Встановлюємо всі залежності
 RUN npm install
 
 # --- PRODUCTION STAGE ---
@@ -20,20 +20,26 @@ FROM node:20-slim AS runner
 
 WORKDIR /app
 
-# Copy built node_modules and package files
+# Копіюємо модулі з етапу збірки
 COPY --from=builder /app/node_modules ./node_modules
 COPY package*.json ./
-COPY server.js ./
-COPY public/ ./public
 
-# Note: events.db is SQLite. If we want to persist data, we will use a Docker volume.
-# We will create a directory for data and modify the application to store the DB there, 
-# or just keep it in /app and mount a single file/directory.
-# Let's keep events.db path as ./events.db in server.js, but we can mount a volume to /app/events.db.
+# Копіюємо ТВІЙ головний файл (index.js замість server.js)
+COPY index.js ./
+
+# Копіюємо твої папки з кодом
+COPY models/ ./models
+COPY services/ ./services
+COPY tests/ ./tests
+
+# Якщо у тебе немає папки public, цей рядок можна видалити або закоментувати.
+# Якщо вона з'явиться пізніше — розкоментуй.
+# COPY public/ ./public
 
 EXPOSE 8080
 
 ENV PORT=8080
 ENV NODE_ENV=production
 
+# Переконайся, що в package.json у "scripts" є "start": "node index.js"
 CMD ["npm", "start"]
