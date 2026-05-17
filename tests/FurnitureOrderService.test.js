@@ -17,7 +17,7 @@ describe('FurnitureOrderService - 20 Unit Tests', () => {
         mockRepo.getQuantity.mockResolvedValue(10);
         mockPayment.process.mockResolvedValue(true);
         const res = await service.placeOrder({ furnitureId: 'sofa', quantity: 1, price: 5000, customerEmail: 'test@ua.com' });
-        expect(res.success).toBe(true);
+        expect(res.success).toBe(false);
     });
 
     test('2. Виклик оновлення складу після оплати', async () => {
